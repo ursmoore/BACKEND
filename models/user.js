@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      user.hasOne(models.space, { foreignKey: "userId" }); //user has one space -> and space is connected by foreignKey "userId"
     }
   }
   user.init(
