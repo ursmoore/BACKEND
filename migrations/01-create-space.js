@@ -17,9 +17,11 @@ module.exports = {
       },
       backgroundColor: {
         type: Sequelize.STRING,
+        defaultValue: "#000000",
       },
       color: {
         type: Sequelize.STRING,
+        defaultValue: "#ffffff",
       },
       createdAt: {
         allowNull: false,
@@ -29,10 +31,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      // userId: {
-      //   allowNull: false,
-      //   type: Sequelize.INTEGER,
-      // },
     });
   },
   down: async (queryInterface, Sequelize) => {

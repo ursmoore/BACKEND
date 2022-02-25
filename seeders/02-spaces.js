@@ -23,6 +23,24 @@ module.exports = {
           updatedAt: new Date(),
           userId: 2,
         },
+        {
+          title: "COOL Space",
+          description: "COOL COOOL COOOL!",
+          backgroundColor: "#ffffff",
+          color: "#000000",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          userId: 3,
+        },
+        {
+          title: "fukki Space",
+          description: "fikki fukki fack!",
+          backgroundColor: "#060A5D",
+          color: "#DE0000",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          userId: 4,
+        },
       ],
       {}
     );
