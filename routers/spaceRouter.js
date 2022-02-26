@@ -3,6 +3,7 @@ const router = new Router();
 const Space = require("../models").space;
 const Story = require("../models").story;
 const auth = require("../auth/middleware");
+const authMiddleware = require("../auth/middleware");
 
 router.get("/", async (req, res) => {
   const getAllSpaces = await Space.findAll();
@@ -32,48 +33,6 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// //endpoint for the delete button!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// router.delete("/:spaceId/stories/:storyId", auth, async (req, res, next) => {
-//   try {
-//     const { spaceId, storyId } = req.params;
-//     const story = await Story.findByPk(storyId, { include: [Space] });
-//     if (!story) {
-//       return res.status(404).send("story not found");
-//     }
-
-//     // Check if this user is the owner of the space
-//     if (story.space.userId !== req.user.id) {
-//       return res.status(401).send("You're not authorized to delete this story");
-//     }
-//     await story.destroy();
-
-//     res.send({ message: "ok", storyId });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// router.delete("/:spaceId/stories/:storyId", auth, async (req, res, next) => {
-//   try {
-//     const { spaceId, storyId } = req.params;
-//     const story = await Story.findByPk(storyId, { include: [Space] });
-//     if (!story) {
-//       return res.status(404).send("Story not found");
-//     }
-
-//     // Check if this user is the owner of the space
-//     if (story.space.userId !== req.user.id) {
-//       return res.status(401).send("You're not authorized to delete this story");
-//     }
-
-//     await story.destroy();
-
-//     res.send({ message: "ok", storyId });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
-
 //endpoint for the delete button!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.delete("/delete/stories/:storyId", auth, async (req, res, next) => {
   try {
@@ -87,6 +46,52 @@ router.delete("/delete/stories/:storyId", auth, async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+});
+
+// ADD A STORY TO DATABASE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+router.post("/create/story/:id", authMiddleware, async (req, res, next) => {
+  const spaceId = parseInt(req.params.id);
+  const { name, content, image } = req.body;
+  console.log("the body", req.body);
+  try {
+    const space = await Space.findByPk(spaceId);
+    if (!space) {
+      res.status(404).send("space Id does not match");
+    } else {
+      const newStory = await Story.create({
+        name: name,
+        content: content,
+        imageUrl: image,
+        spaceId: spaceId,
+      });
+      res.send(newStory);
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
+//HERE YOU CAN MODIFY YOUR SPACY SPACE FOR FEATURE 6 !!!!!!!!!!!!!!!!!!!!!!!!!!!
+router.patch("/edit/:id", async (req, res) => {
+  try {
+    const spaceId = req.params.id;
+    const { title, description, backgroundColor, color } = req.body;
+
+    const getSpaceById = await Space.findByPk(spaceId);
+    if (!getSpaceById) {
+      res.status(400).send("This is not correct");
+    } else {
+      const updateSpace = await getSpaceById.update({
+        title,
+        description,
+        backgroundColor,
+        color,
+      });
+      res.status(200).send(updateSpace);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
